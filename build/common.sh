@@ -411,11 +411,11 @@ function kube::build::docker_build() {
 
   local -r image=$1
   local -r context_dir=$2
-  local -r pull="${3:-true}"
+  local -r pull="false"
   local build_args
   IFS=" " read -r -a build_args <<< "$4"
   readonly build_args
-  local -ra build_cmd=("${DOCKER[@]}" buildx build --load -t "${image}" "--pull=${pull}" "${build_args[@]}" "${context_dir}")
+  local -ra build_cmd=("${DOCKER[@]}" buildx build --no-cache=false --load -t "${image}" "--pull=${pull}" "${build_args[@]}" "${context_dir}")
 
   kube::log::status "Building Docker image ${image}"
   local docker_output
