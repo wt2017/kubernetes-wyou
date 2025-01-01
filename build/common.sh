@@ -97,8 +97,8 @@ readonly KUBE_RSYNC_PORT="${KUBE_RSYNC_PORT:-}"
 readonly KUBE_CONTAINER_RSYNC_PORT=8730
 
 # These are the default versions (image tags) for their respective base images.
-readonly __default_distroless_iptables_version=v0.5.6
-readonly __default_go_runner_version=v2.3.1-go1.22.5-bookworm.0
+readonly __default_distroless_iptables_version=v0.5.10
+readonly __default_go_runner_version=v2.4.0-go1.22.9-bookworm.0
 readonly __default_setcap_version=bookworm-v1.0.3
 
 # These are the base images for the Docker-wrapped binaries.
@@ -411,11 +411,11 @@ function kube::build::docker_build() {
 
   local -r image=$1
   local -r context_dir=$2
-  local -r pull="false"
+  local -r pull="${3:-true}"
   local build_args
   IFS=" " read -r -a build_args <<< "$4"
   readonly build_args
-  local -ra build_cmd=("${DOCKER[@]}" buildx build --no-cache=false --load -t "${image}" "--pull=${pull}" "${build_args[@]}" "${context_dir}")
+  local -ra build_cmd=("${DOCKER[@]}" buildx build --load -t "${image}" "--pull=${pull}" "${build_args[@]}" "${context_dir}")
 
   kube::log::status "Building Docker image ${image}"
   local docker_output
